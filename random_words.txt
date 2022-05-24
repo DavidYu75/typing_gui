@@ -1,24 +1,3 @@
-Skip to content
-
-Search…
-All gists
-Back to GitHub
-@DavidYu75
-@deekayen
-deekayen/1-1000.txt
-Last active 10 days ago • Report abuse
-168
-54
-Code
-Revisions
-3
-Stars
-168
-Forks
-54
-<script src="https://gist.github.com/deekayen/4148741.js"></script>
-1,000 most common US English words
-1-1000.txt
 the
 of
 to

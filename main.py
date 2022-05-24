@@ -4,19 +4,39 @@ import random
 word_list = []
 player_typing = []
 
+
 def test_length(length):
     for i in range(length):
         word_list.append(random.choice(open('random_words.txt').read().split()).strip())
     return
 
+
+def render_text(list):
+    x_index = 50
+    y_index = 30
+    for i in range(len(list)):
+        words = font.render(list[i], True, BLACK)
+        # #words_rect = words.get_rect()
+        # if x_index > 100:
+        #     y_index += 100
+        #     words_rect.center(x_index, y_index)
+        # else:
+        # words_rect.center = (x_index, y_index)
+        screen.blit(words, (x_index, y_index))
+        x_index += 75
+
+
 test_length(10)
 print(word_list)
 
+
 successes, failures = pygame.init()
 print("{0} successes and {1} failures".format(successes, failures))
+pygame.key.set_repeat(500, 20)
+pygame.display.set_caption('Monkeytype')
 
 # screen size and frames per second
-screen = pygame.display.set_mode((720, 480))
+screen = pygame.display.set_mode((1000, 700))
 clock = pygame.time.Clock()
 FPS = 60
 
@@ -51,10 +71,16 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 user_text = user_text[:-1]
+            elif event.key == pygame.K_SPACE:
+                user_text = ''
+            elif event.key == pygame.K_RETURN:
+                user_text = ''
             else:
                 user_text += event.unicode
 
-    screen.fill(BLACK)
+    screen.fill(WHITE)
+
+    render_text(word_list)
 
     if active:
         color = GREEN
