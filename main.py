@@ -1,5 +1,6 @@
 import pygame
 import random
+from typing_logic import *
 
 word_list = []
 player_typing = []
@@ -23,7 +24,13 @@ def render_text(list):
         # else:
         # words_rect.center = (x_index, y_index)
         screen.blit(words, (x_index, y_index))
-        x_index += 75
+        x_index += 1000/len(list)
+
+
+def results():
+    accuracy = font.render(get_accuracy(word_list, player_typing), True, BLACK)
+    accuracy_rect = accuracy.get_rect()
+    screen.blit(accuracy, accuracy_rect)
 
 
 test_length(10)
@@ -72,9 +79,14 @@ while True:
             if event.key == pygame.K_BACKSPACE:
                 user_text = user_text[:-1]
             elif event.key == pygame.K_SPACE:
+                player_typing.append(user_text)
                 user_text = ''
             elif event.key == pygame.K_RETURN:
+                player_typing.append(user_text)
                 user_text = ''
+                results()
+                accuracy = get_accuracy(word_list, player_typing)
+                print(accuracy)
             else:
                 user_text += event.unicode
 
