@@ -47,6 +47,9 @@ screen = pygame.display.set_mode((1000, 700))
 clock = pygame.time.Clock()
 FPS = 60
 
+counter, text = 10, '10'.rjust(3)
+pygame.time.set_timer(pygame.USEREVENT, 1000)
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -61,6 +64,7 @@ user_text = ''
 text_field = pygame.Rect(200, 200, 140, 32)
 
 active = False
+started = False
 
 while True:
     clock.tick(FPS)
@@ -72,23 +76,29 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if text_field.collidepoint(event.pos):
                 active = True
+                started = True
             else:
                 active = False
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
-                user_text = user_text[:-1]
-            elif event.key == pygame.K_SPACE:
-                player_typing.append(user_text)
-                user_text = ''
-            elif event.key == pygame.K_RETURN:
-                player_typing.append(user_text)
-                user_text = ''
-                results()
-                accuracy = get_accuracy(word_list, player_typing)
-                print(accuracy)
-            else:
-                user_text += event.unicode
+        if started:
+            if event.type == pygame.USEREVENT:
+                counter -= 1
+                text = str(counter).rjust(3) if counter > 0 else 'Go!'
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    user_text = user_text[:-1]
+                elif event.key == pygame.K_SPACE:
+                    player_typing.append(user_text)
+                    user_text = ''
+                elif event.key == pygame.K_RETURN:
+                    player_typing.append(user_text)
+                    user_text = ''
+                    results()
+                    accuracy = get_accuracy(word_list, player_typing)
+                    print(accuracy)
+
+                else:
+                    user_text += event.unicode
 
     screen.fill(WHITE)
 
