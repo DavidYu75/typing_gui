@@ -17,13 +17,14 @@ def render_text(list):
     y_index = 30
     for i in range(len(list)):
         words = font.render(list[i], True, BLACK)
+        words_rect = words.get_rect(center=(x_index, y_index))
         # #words_rect = words.get_rect()
         # if x_index > 100:
         #     y_index += 100
         #     words_rect.center(x_index, y_index)
         # else:
         # words_rect.center = (x_index, y_index)
-        screen.blit(words, (x_index, y_index))
+        screen.blit(words, words_rect)
         x_index += 1000/len(list)
 
 
@@ -61,7 +62,9 @@ font = pygame.font.Font(None, 32)
 user_text = ''
 
 # text field
-text_field = pygame.Rect(200, 200, 140, 32)
+text_field = pygame.Rect(425, 275, 150, 32)
+
+start_button = pygame.Rect(425, 275, 150, 32)
 
 active = False
 started = False
@@ -76,45 +79,53 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if text_field.collidepoint(event.pos):
                 active = True
-                started = True
             else:
                 active = False
 
-        if started:
-            if event.type == pygame.USEREVENT:
-                counter -= 1
-                text = str(counter).rjust(3) if counter > 0 else 'Go!'
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_BACKSPACE:
-                    user_text = user_text[:-1]
-                elif event.key == pygame.K_SPACE:
-                    player_typing.append(user_text)
-                    user_text = ''
-                elif event.key == pygame.K_RETURN:
-                    player_typing.append(user_text)
-                    user_text = ''
-                    results()
-                    accuracy = get_accuracy(word_list, player_typing)
-                    print(accuracy)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if start_button.collidepoint(event.pos):
+                screen.fill(WHITE)
+                started = True
 
-                else:
-                    user_text += event.unicode
+        if event.type == pygame.USEREVENT:
+            counter -= 1
+            text = str(counter).rjust(3) if counter > 0 else 'Go!'
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                user_text = user_text[:-1]
+            elif event.key == pygame.K_SPACE:
+                player_typing.append(user_text)
+                user_text = ''
+            elif event.key == pygame.K_RETURN:
+                player_typing.append(user_text)
+                user_text = ''
+                results()
+                accuracy = get_accuracy(word_list, player_typing)
+                print(accuracy)
+
+            else:
+                user_text += event.unicode
 
     screen.fill(WHITE)
 
-    render_text(word_list)
+    start_text = font.render('Start', True, BLACK)
+    screen.blit(start_text, start_button)
+    pygame.draw.rect(screen, RED, start_button)
 
-    if active:
-        color = GREEN
-    else:
-        color = RED
+    if started:
+        render_text(word_list)
 
-    pygame.draw.rect(screen, color, text_field)
+        if active:
+            color = GREEN
+        else:
+            color = RED
 
-    text_surface = font.render(user_text, True, (255, 255, 255))
+        pygame.draw.rect(screen, color, text_field)
 
-    screen.blit(text_surface, (text_field.x+5, text_field.y+5))
+        text_surface = font.render(user_text, True, (255, 255, 255))
 
-    text_field.w = max(100, text_surface.get_width() + 10)
+        screen.blit(text_surface, (text_field.x+5, text_field.y+5))
+
+        text_field.w = max(100, text_surface.get_width() + 10)
 
     pygame.display.flip()
