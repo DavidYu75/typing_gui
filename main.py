@@ -18,14 +18,11 @@ def render_text(list):
     for i in range(len(list)):
         words = font.render(list[i], True, BLACK)
         words_rect = words.get_rect(center=(x_index, y_index))
-        # #words_rect = words.get_rect()
-        # if x_index > 100:
-        #     y_index += 100
-        #     words_rect.center(x_index, y_index)
-        # else:
-        # words_rect.center = (x_index, y_index)
         screen.blit(words, words_rect)
-        x_index += 1000/len(list)
+        x_index += 1000/10
+        if x_index > 950:
+            x_index = 50
+            y_index += 50
 
 
 def results():
@@ -34,8 +31,8 @@ def results():
     screen.blit(accuracy, accuracy_rect)
 
 
-test_length(10)
-print(word_list)
+# test_length(50)
+# print(word_list)
 
 
 successes, failures = pygame.init()
@@ -59,15 +56,28 @@ color = RED
 
 # font
 font = pygame.font.Font(None, 32)
+title = pygame.font.Font(None, 128)
 user_text = ''
 
 # text field
 text_field = pygame.Rect(425, 275, 150, 32)
 
-start_button = pygame.Rect(425, 275, 150, 32)
+# buttons
+one_line_button = pygame.Rect(425, 275, 150, 32)
+two_line_button = pygame.Rect(425, 350, 150, 32)
+three_line_button = pygame.Rect(425, 425, 150, 32)
+exit_button = pygame.Rect(425, 500, 150, 32)
+retry_button = pygame.Rect(425, 350, 50, 32)
+
+title_text = title.render("MonkeyType", True, BLACK)
+one_line = font.render("One Line", True, WHITE)
+two_line = font.render("Two Line", True, WHITE)
+three_line = font.render("Three Line", True, WHITE)
+exit = font.render("Exit", True, WHITE)
 
 active = False
 started = False
+selected = False
 
 while True:
     clock.tick(FPS)
@@ -82,10 +92,22 @@ while True:
             else:
                 active = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if start_button.collidepoint(event.pos):
-                screen.fill(WHITE)
-                started = True
+        if not selected:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if one_line_button.collidepoint(event.pos):
+                    started = True
+                    selected = True
+                    test_length(10)
+                elif two_line_button.collidepoint(event.pos):
+                    started = True
+                    selected = True
+                    test_length(20)
+                elif three_line_button.collidepoint(event.pos):
+                    started = True
+                    selected = True
+                    test_length(30)
+                elif exit_button.collidepoint(event.pos):
+                    pygame.quit()
 
         if event.type == pygame.USEREVENT:
             counter -= 1
@@ -109,10 +131,26 @@ while True:
     screen.fill(WHITE)
 
     start_text = font.render('Start', True, BLACK)
-    screen.blit(start_text, start_button)
-    pygame.draw.rect(screen, RED, start_button)
+    screen.blit(start_text, one_line_button)
+
+    pygame.draw.rect(screen, RED, one_line_button)
+    pygame.draw.rect(screen, RED, two_line_button)
+    pygame.draw.rect(screen, RED, three_line_button)
+    pygame.draw.rect(screen, RED, exit_button)
+
+    screen.blit(title_text, (250, 100))
+    screen.blit(one_line, one_line_button)
+    screen.blit(two_line, two_line_button)
+    screen.blit(three_line, three_line_button)
+    screen.blit(exit, exit_button)
 
     if started:
+        pygame.draw.rect(screen, WHITE, one_line_button)
+        pygame.draw.rect(screen,WHITE, two_line_button)
+        pygame.draw.rect(screen, WHITE, three_line_button)
+        pygame.draw.rect(screen, WHITE, exit_button)
+        title_text = title.render('', True, WHITE)
+
         render_text(word_list)
 
         if active:
@@ -127,5 +165,7 @@ while True:
         screen.blit(text_surface, (text_field.x+5, text_field.y+5))
 
         text_field.w = max(100, text_surface.get_width() + 10)
+
+        pygame.draw.rect(screen, RED, retry_button)
 
     pygame.display.flip()
