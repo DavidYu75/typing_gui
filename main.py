@@ -26,8 +26,8 @@ def render_text(list):
 
 
 def results():
-    accuracy = font.render(get_accuracy(word_list, player_typing), True, BLACK)
-    accuracy_rect = accuracy.get_rect()
+    accuracy = font.render('Accuracy: ' + get_accuracy(word_list, player_typing) + '%', True, BLACK)
+    accuracy_rect = accuracy.get_rect(center=(500, 325))
     screen.blit(accuracy, accuracy_rect)
 
 
@@ -78,6 +78,7 @@ exit = font.render("Exit", True, WHITE)
 active = False
 started = False
 selected = False
+finished = False
 
 while True:
     clock.tick(FPS)
@@ -121,9 +122,9 @@ while True:
             elif event.key == pygame.K_RETURN:
                 player_typing.append(user_text)
                 user_text = ''
-                results()
-                accuracy = get_accuracy(word_list, player_typing)
-                print(accuracy)
+                finished = True
+                # accuracy = get_accuracy(word_list, player_typing)
+                # print(accuracy)
 
             else:
                 user_text += event.unicode
@@ -167,5 +168,8 @@ while True:
         text_field.w = max(100, text_surface.get_width() + 10)
 
         pygame.draw.rect(screen, RED, retry_button)
+
+        if finished:
+            results()
 
     pygame.display.flip()

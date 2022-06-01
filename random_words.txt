@@ -250,10 +250,8 @@ few
 north
 open
 seem
-together
 next
 white
-children
 begin
 got
 walk
@@ -285,7 +283,6 @@ friend
 began
 idea
 fish
-mountain
 stop
 once
 base
@@ -298,7 +295,6 @@ color
 face
 wood
 main
-enough
 plain
 girl
 usual
@@ -308,7 +304,6 @@ above
 ever
 red
 list
-though
 feel
 talk
 bird
@@ -320,17 +315,12 @@ direct
 pose
 leave
 song
-measure
 door
-product
 black
 short
-numeral
 class
 wind
-question
 happen
-complete
 ship
 area
 half
@@ -338,7 +328,6 @@ rock
 order
 fire
 south
-problem
 piece
 told
 knew
@@ -356,13 +345,11 @@ true
 during
 hundred
 five
-remember
 step
 early
 hold
 west
 ground
-interest
 reach
 fast
 verb
@@ -572,7 +559,6 @@ winter
 sat
 written
 wild
-instrument
 kept
 glass
 grass
@@ -610,12 +596,10 @@ metal
 whether
 push
 seven
-paragraph
 third
 shall
 held
 hair
-describe
 cook
 floor
 either
@@ -637,7 +621,6 @@ tall
 sand
 soil
 roll
-temperature
 finger
 industry
 value
@@ -666,7 +649,6 @@ child
 straight
 consonant
 nation
-dictionary
 milk
 speed
 method
@@ -685,7 +667,6 @@ cool
 design
 poor
 lot
-experiment
 bottom
 key
 iron
