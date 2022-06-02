@@ -1,9 +1,11 @@
 import pygame
 import random
 from typing_logic import *
+import time
 
 word_list = []
 player_typing = []
+time_spent = 0
 
 
 def test_length(length):
@@ -30,9 +32,26 @@ def results():
     accuracy_rect = accuracy.get_rect(center=(500, 325))
     screen.blit(accuracy, accuracy_rect)
 
+    time = font.render('Time Spent: ' + str(time_spent) + ' seconds', True, BLACK)
+    time_rect = time.get_rect(center=(500, 350))
+    screen.blit(time, time_rect)
 
-# test_length(50)
-# print(word_list)
+    wpm = font.render("WPM: " + get_wpm(time_spent, player_typing), True, BLACK)
+    wpm_rect = wpm.get_rect(center=(500, 375))
+    screen.blit(wpm, wpm_rect)
+
+
+def countdown(seconds):
+    count = seconds
+    for i in range(seconds):
+        countdown = font.render(str(count - i) + "...", True, BLACK)
+        countdown_rect = countdown.get_rect(center=(500, 250))
+        screen.blit(countdown, countdown_rect)
+        time.sleep(1)
+        if count - i == 1:
+            start = font.render("Go!", True, BLACK)
+            start_rect = start.get_rect(center=(500, 250))
+            screen.blit(start, start_rect)
 
 
 successes, failures = pygame.init()
@@ -90,6 +109,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if text_field.collidepoint(event.pos):
                 active = True
+                starting_time = time.time()
             else:
                 active = False
 
@@ -110,24 +130,23 @@ while True:
                 elif exit_button.collidepoint(event.pos):
                     pygame.quit()
 
-        if event.type == pygame.USEREVENT:
-            counter -= 1
-            text = str(counter).rjust(3) if counter > 0 else 'Go!'
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
-                user_text = user_text[:-1]
-            elif event.key == pygame.K_SPACE:
-                player_typing.append(user_text)
-                user_text = ''
-            elif event.key == pygame.K_RETURN:
-                player_typing.append(user_text)
-                user_text = ''
-                finished = True
-                # accuracy = get_accuracy(word_list, player_typing)
-                # print(accuracy)
-
-            else:
-                user_text += event.unicode
+        if active:
+            if event.type == pygame.USEREVENT:
+                counter -= 1
+                text = str(counter).rjust(3) if counter > 0 else 'Go!'
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    user_text = user_text[:-1]
+                elif event.key == pygame.K_SPACE:
+                    player_typing.append(user_text)
+                    user_text = ''
+                elif event.key == pygame.K_RETURN:
+                    player_typing.append(user_text)
+                    user_text = ''
+                    finished = True
+                    ending_time = time.time()
+                else:
+                    user_text += event.unicode
 
     screen.fill(WHITE)
 
@@ -170,6 +189,7 @@ while True:
         pygame.draw.rect(screen, RED, retry_button)
 
         if finished:
+            time_spent = round(ending_time - starting_time)
             results()
 
     pygame.display.flip()
