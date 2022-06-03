@@ -86,7 +86,7 @@ one_line_button = pygame.Rect(425, 275, 150, 32)
 two_line_button = pygame.Rect(425, 350, 150, 32)
 three_line_button = pygame.Rect(425, 425, 150, 32)
 exit_button = pygame.Rect(425, 500, 150, 32)
-retry_button = pygame.Rect(425, 350, 50, 32)
+retry_button = pygame.Rect(450, 400, 50, 32)
 
 title_text = title.render("MonkeyType", True, BLACK)
 one_line = font.render("One Line", True, WHITE)
@@ -106,12 +106,13 @@ while True:
         if event.type == pygame.QUIT:
             quit()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if text_field.collidepoint(event.pos):
-                active = True
-                starting_time = time.time()
-            else:
-                active = False
+        if not finished:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if text_field.collidepoint(event.pos):
+                    active = True
+                    starting_time = time.time()
+                else:
+                    active = False
 
         if not selected:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -145,6 +146,7 @@ while True:
                     user_text = ''
                     finished = True
                     ending_time = time.time()
+                    active = False
                 else:
                     user_text += event.unicode
 
@@ -187,6 +189,15 @@ while True:
         text_field.w = max(100, text_surface.get_width() + 10)
 
         pygame.draw.rect(screen, RED, retry_button)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if retry_button.collidepoint(event.pos):
+                active = False
+                started = False
+                selected = False
+                finished = False
+                word_list.clear()
+                player_typing.clear()
+                time_spent = 0
 
         if finished:
             time_spent = round(ending_time - starting_time)
