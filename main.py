@@ -88,7 +88,6 @@ three_line_button = pygame.Rect(425, 425, 150, 32)
 exit_button = pygame.Rect(425, 500, 150, 32)
 retry_button = pygame.Rect(450, 400, 50, 32)
 
-title_text = title.render("MonkeyType", True, BLACK)
 one_line = font.render("One Line", True, WHITE)
 two_line = font.render("Two Line", True, WHITE)
 three_line = font.render("Three Line", True, WHITE)
@@ -160,11 +159,13 @@ while True:
     pygame.draw.rect(screen, RED, three_line_button)
     pygame.draw.rect(screen, RED, exit_button)
 
-    screen.blit(title_text, (250, 100))
-    screen.blit(one_line, one_line_button)
-    screen.blit(two_line, two_line_button)
-    screen.blit(three_line, three_line_button)
-    screen.blit(exit, exit_button)
+    if not started:
+        title_text = title.render("MonkeyType", True, BLACK)
+        screen.blit(title_text, (250, 100))
+        screen.blit(one_line, one_line_button)
+        screen.blit(two_line, two_line_button)
+        screen.blit(three_line, three_line_button)
+        screen.blit(exit, exit_button)
 
     if started:
         pygame.draw.rect(screen, WHITE, one_line_button)
