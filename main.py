@@ -6,6 +6,7 @@ import time
 word_list = []
 player_typing = []
 time_spent = 0
+active_typing = ""
 
 
 def test_length(length):
@@ -98,6 +99,8 @@ started = False
 selected = False
 finished = False
 
+index = 0
+
 while True:
     clock.tick(FPS)
 
@@ -135,6 +138,11 @@ while True:
                 counter -= 1
                 text = str(counter).rjust(3) if counter > 0 else 'Go!'
             if event.type == pygame.KEYDOWN:
+                active_typing = user_text[:index + 1]
+                index += 1
+                if active_typing != word_list[0][:index + 1]:
+                    color = RED
+                print(active_typing)
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_SPACE:
