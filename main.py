@@ -9,9 +9,13 @@ time_spent = 0
 active_typing = ""
 
 
-def test_length(length):
-    for i in range(length):
-        word_list.append(random.choice(open('random_words.txt').read().split()).strip())
+def test_length(length, mode):
+    if mode == 1:
+        for i in range(length):
+            word_list.append(random.choice(open('python_words.txt').read().split()).strip())
+    elif mode == 2:
+        for i in range(length):
+            word_list.append(random.choice(open('random_words.txt').read().split()).strip())
     return
 
 
@@ -59,6 +63,10 @@ successes, failures = pygame.init()
 print("{0} successes and {1} failures".format(successes, failures))
 pygame.key.set_repeat(500, 20)
 pygame.display.set_caption('Monkeytype')
+retry_img = pygame.image.load('images/retry.png')
+surprised_img = pygame.image.load('images/surprised.png')
+monkey_img = pygame.image.load('images/monkey.png')
+monkey2_img = pygame.image.load('images/monkey2.png')
 
 # screen size and frames per second
 screen = pygame.display.set_mode((1000, 700))
@@ -80,24 +88,30 @@ title = pygame.font.Font(None, 128)
 user_text = ''
 
 # text field
-text_field = pygame.Rect(425, 275, 150, 32)
+text_field = pygame.Rect(450, 275, 150, 32)
 
 # buttons
-one_line_button = pygame.Rect(425, 275, 150, 32)
-two_line_button = pygame.Rect(425, 350, 150, 32)
-three_line_button = pygame.Rect(425, 425, 150, 32)
-exit_button = pygame.Rect(425, 500, 150, 32)
-retry_button = pygame.Rect(450, 400, 50, 32)
+one_line_button = pygame.Rect(425, 250, 150, 32)
+two_line_button = pygame.Rect(425, 325, 150, 32)
+three_line_button = pygame.Rect(425, 400, 150, 32)
+exit_button = pygame.Rect(425, 475, 150, 32)
+retry_button = pygame.Rect(475, 425, 50, 32)
+english_button = pygame.Rect(400, 275, 200, 30)
+python_button = pygame.Rect(400, 350, 200, 30)
 
 one_line = font.render("One Line", True, WHITE)
 two_line = font.render("Two Line", True, WHITE)
 three_line = font.render("Three Line", True, WHITE)
 exit = font.render("Exit", True, WHITE)
+english = font.render("English", True, WHITE)
+python = font.render("Python", True, WHITE)
 
 active = False
 started = False
 selected = False
 finished = False
+mode_selected = False
+mode = 0
 
 index = 0
 
@@ -121,15 +135,15 @@ while True:
                 if one_line_button.collidepoint(event.pos):
                     started = True
                     selected = True
-                    test_length(10)
+                    test_length(10, mode)
                 elif two_line_button.collidepoint(event.pos):
                     started = True
                     selected = True
-                    test_length(20)
+                    test_length(20, mode)
                 elif three_line_button.collidepoint(event.pos):
                     started = True
                     selected = True
-                    test_length(30)
+                    test_length(30, mode)
                 elif exit_button.collidepoint(event.pos):
                     pygame.quit()
 
@@ -138,11 +152,11 @@ while True:
                 counter -= 1
                 text = str(counter).rjust(3) if counter > 0 else 'Go!'
             if event.type == pygame.KEYDOWN:
-                active_typing = user_text[:index + 1]
-                index += 1
-                if active_typing != word_list[0][:index + 1]:
-                    color = RED
-                print(active_typing)
+                # active_typing = user_text[:index + 1]
+                # index += 1
+                # if active_typing != word_list[0][:index + 1]:
+                #     color = RED
+                # print(active_typing)
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_SPACE:
@@ -159,13 +173,35 @@ while True:
 
     screen.fill(WHITE)
 
-    start_text = font.render('Start', True, BLACK)
-    screen.blit(start_text, one_line_button)
+    screen.blit(monkey_img, (100, 500))
+    screen.blit(monkey2_img, (775, 525))
+    # start_text = font.render('Start', True, BLACK)
+    # screen.blit(start_text, one_line_button)
 
-    pygame.draw.rect(screen, RED, one_line_button)
-    pygame.draw.rect(screen, RED, two_line_button)
-    pygame.draw.rect(screen, RED, three_line_button)
-    pygame.draw.rect(screen, RED, exit_button)
+    if mode_selected:
+        pygame.draw.rect(screen, WHITE, english_button)
+        pygame.draw.rect(screen, WHITE, python_button)
+        pygame.draw.rect(screen, RED, one_line_button)
+        pygame.draw.rect(screen, RED, two_line_button)
+        pygame.draw.rect(screen, RED, three_line_button)
+        pygame.draw.rect(screen, RED, exit_button)
+
+    if not mode_selected:
+        pygame.draw.rect(screen, RED, english_button)
+        pygame.draw.rect(screen, RED, python_button)
+        pygame.draw.rect(screen, RED, exit_button)
+        screen.blit(exit, exit_button)
+        screen.blit(python, python_button)
+        screen.blit(english, english_button)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if english_button.collidepoint(event.pos):
+                mode_selected = True
+                mode = 2
+            elif python_button.collidepoint(event.pos):
+                mode_selected = True
+                mode = 1
+            elif exit_button.collidepoint(event.pos):
+                pygame.quit()
 
     if not started:
         title_text = title.render("MonkeyType", True, BLACK)
@@ -177,7 +213,7 @@ while True:
 
     if started:
         pygame.draw.rect(screen, WHITE, one_line_button)
-        pygame.draw.rect(screen,WHITE, two_line_button)
+        pygame.draw.rect(screen, WHITE, two_line_button)
         pygame.draw.rect(screen, WHITE, three_line_button)
         pygame.draw.rect(screen, WHITE, exit_button)
         title_text = title.render('', True, WHITE)
@@ -198,12 +234,15 @@ while True:
         text_field.w = max(100, text_surface.get_width() + 10)
 
         pygame.draw.rect(screen, RED, retry_button)
+        screen.blit(retry_img, retry_button)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if retry_button.collidepoint(event.pos):
                 active = False
                 started = False
                 selected = False
                 finished = False
+                mode_selected = False
+                mode = 0
                 word_list.clear()
                 player_typing.clear()
                 time_spent = 0
@@ -211,5 +250,6 @@ while True:
         if finished:
             time_spent = round(ending_time - starting_time)
             results()
+            screen.blit(surprised_img, (440, 500))
 
     pygame.display.flip()
