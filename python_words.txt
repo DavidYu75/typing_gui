@@ -41,7 +41,6 @@ int
 except
 del
 format
-partition
 split
 strip
 read
@@ -51,18 +50,14 @@ while
 for
 round
 len
-enumerate
 sort
 input
 find
-capitalize
 copy
 reverse
 discard
-intersection
 issubset
 union
-issubclass
 rstrip
 update
 divmod
